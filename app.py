@@ -1,5 +1,11 @@
-import requests
 
-response = requests.get("http://www.johnlewis.com/2018-apple-ipad-pro-12-9-inch-a12x-bionic-ios-wi-fi-cellular-512gb/space-grev/p3834614")
+from flask import Flask
+from views.items import item_blueprint
+from views.alerts import alert_blueprint
 
-print(response.content)
+app = Flask(__name__)
+
+app.register_blueprint(item_blueprint, url_prefix="/items")
+
+if __name__ == "__main__":
+    app.run(debug=True)
