@@ -1,10 +1,12 @@
-import uuid
-from typing import Dict
-import re
-import requests
-from bs4 import BeautifulSoup
 from dataclasses import dataclass, field
+from typing import Dict, List
+from bs4 import BeautifulSoup
+import requests
+import re
+import uuid
+from common.database import Database
 from models.model import Model
+
 
 @dataclass(eq=False)
 class Item(Model):
@@ -12,12 +14,8 @@ class Item(Model):
     url: str
     tag_name: str
     query: Dict
+    price: float = field(default=None)
     _id: str = field(default_factory=lambda: uuid.uuid4().hex)
-
-
-    def __post_init__(self):
-        self.price = None
-
 
     def load_price(self) -> float:
         request = requests.get(self.url)
@@ -26,7 +24,7 @@ class Item(Model):
         element = soup.find(self.tag_name, self.query)
         string_price = element.text.strip()
 
-        pattern = re.compile(r"(\d+,?\d*\.\d\d)")
+        pattern = re.compile(r"(\d+,?\d+\.\d+)")
         match = pattern.search(string_price)
         found_price = match.group(1)
         without_commas = found_price.replace(",", "")
@@ -38,5 +36,6 @@ class Item(Model):
             "_id": self._id,
             "url": self.url,
             "tag_name": self.tag_name,
+            "price": self.price,
             "query": self.query
         }
