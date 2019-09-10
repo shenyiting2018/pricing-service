@@ -17,7 +17,6 @@ def index():
 def create_alert():
     if request.method == 'POST':
         item_url = request.form['item_url']
-        print('create_alert: item_url: {}'.format(item_url))
         store = Store.find_by_url(item_url)
         item = Item(item_url, store.tag_name, store.query)
         item.load_price()
@@ -27,6 +26,7 @@ def create_alert():
         price_limit = request.form['price_limit']
 
         Alert(alert_name, item._id, price_limit).save_to_mongo()
+        return redirect(url_for('.index'))
 
     # What happens if it's a GET request
     return render_template("alerts/new_alert.html")
@@ -45,4 +45,5 @@ def edit_alert(alert_id):
         return redirect(url_for('.index'))
 
     # What happens if it's a GET request
-    return render_template("alerts/edit_alert.html", alert=Alert.get_by_id(alert_id)) 
+    alert = Alert.get_by_id(alert_id)
+    return render_template("alerts/edit_alert.html", alert=alert)
