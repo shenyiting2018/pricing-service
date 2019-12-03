@@ -10,7 +10,7 @@ Author
 
 Website
 ========
-* [http://yiting-flask-price-alert.herokuapp.com/)
+* [Website](http://yiting-flask-price-alert.herokuapp.com/)
 
 Features
 =======
